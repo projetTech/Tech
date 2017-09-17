@@ -38,8 +38,11 @@ class system :
         
     def set_site_number(self):
         self.__site_number = len(self.__map)
+    
+    def update_map (self, location, value):
+        self.__map[location].set_identity(value)
         
-    def set_map (self):
+    def initiate_map (self):
         for x in range (self.__size) :
             for y in range (self.__size):
                 for position in self.__maille :
@@ -90,7 +93,7 @@ class Site:
         return self.__coordinate
         
     def set_identity(self, identity: bool):
-        self.__identite = identity        
+        self.__identity = identity 
     
     def set_neighbor(self, neighbor):
         self.__neighbor = neighbor

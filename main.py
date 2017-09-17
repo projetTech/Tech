@@ -11,23 +11,24 @@ from time import time
 a=time()
 import module_akmc as mc
 from random import randint
-size = 10
+size = 15
 e_aa = 0
 e_ab = 0
 e_bb = 0.21
-proportion_b = 0.9
+proportion_b = 0.5
 
 systeme = mc.system (size)
 systeme.set_maille([(0,0),(0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
-systeme.set_map ()
+systeme.initiate_map ()
 
 nombre_b = int(systeme.get_site_number()*proportion_b)
+print (nombre_b)
 while nombre_b > 0 :
     n = randint(0,systeme.get_site_number()-1) # tirage d'un site au hasard
     if not systeme.get_map()[n].get_identity() : #
         nombre_b -= 1
-        systeme.get_map()[n].set_identity(True)
+        systeme.update_map(n,True)
         
 
 file= open("coordonnee.txt","w")
