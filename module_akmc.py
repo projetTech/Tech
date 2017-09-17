@@ -57,22 +57,24 @@ class system :
             self.__sum_of_energy += site.get_energy()
     
     def update_sum_of_energy (self, site_a, site_b):
+        #Echange des identités des sites
+        tempo = site_a.get_identity()
+        site_a.set_indentity(site_b.get_indentity)
+        site_b.set_indentity(tempo)
+        
+        #Actualisation des energies des voisins
         for site in site_a.get_neighbor():
             self.__sum_of_energy-= site.get_energy()
-            site.get_neighbor()[site.get_neighbor().index(site_a)]=site_b
             site.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
             self.__sum_of_energy+= site.get_energy()
                 
-        for site in site_b.neighbor:
+        for site in site_b.get_neighbor():
             self.__sum_of_energy-= site.get_energy()
-            site.get_neighbor()[site.get_neighbor().index(site_b)]=site_a
             site.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
             self.__sum_of_energy+= site.get_energy()
         
+        #Actualisation des energies des 2 sites
         self.__sum_of_energy-= site_a.get_energy() + site_b.get_energy()
-        tempo = site_a.get_neighbor()
-        site_a.set_neighbor(site_b.get_neighbor())
-        site_b.set_neighbor(tempo)
         site_a.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         site_b.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         self.__sum_of_energy+= site_a.get_energy() + site_b.get_energy()
