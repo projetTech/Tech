@@ -4,6 +4,11 @@ Created on Tue Sep 12 17:49:18 2017
 
 @author: Alexandre
 """
+
+from math import exp
+from random import random
+import functions as fn
+    
 class system :
     """ Un systeme composé d'une partie du matériau"""
     def __init__(self, size):
@@ -13,7 +18,11 @@ class system :
         self.__map = []
         self.__link_energy =[] 
         self.__site_number = 0
+        self.__temperature=297
     #Get function
+    def get_temperature(self):
+        return self.__temperature
+    
     def get_size(self):
         return self.__size
     
@@ -32,6 +41,9 @@ class system :
     #Set function
     def set_link_energy(self, link_energy):
         self.__link_energy = link_energy
+    
+    def set_temperature(self,temperature):
+        self.__temperature = temperature
         
     def set_maille(self, maille):
         self.__maille = maille
@@ -55,12 +67,15 @@ class system :
     def sum_of_energy_init (self):
         for site in self.__map :
             self.__sum_of_energy += site.get_energy()
-    
+            
+   
     def update_sum_of_energy (self, site_a, site_b):
         #Echange des identités des sites
+        #on peut faire le changement sans créer une nouvelle variable: 
+            #site_a.set_identity(!site_a.set_identity) (vu qu'on change true à false ou inversement)
         tempo = site_a.get_identity()
-        site_a.set_indentity(site_b.get_indentity)
-        site_b.set_indentity(tempo)
+        site_a.set_identity(site_b.get_identity)
+        site_b.set_identity(tempo)
         
         #Actualisation des energies des voisins
         for site in site_a.get_neighbor():
@@ -78,7 +93,39 @@ class system :
         site_a.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         site_b.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         self.__sum_of_energy+= site_a.get_energy() + site_b.get_energy()
-
+        
+   
+        
+    def config_choice(self):
+        energy_init=self.__sum_of_energy #l'énergie de la configuration initiale / self. ... à verifier la synthaxe 
+        total=0
+        i=1
+        stockage_sites_list=[]
+        total_energy_sorted=[]
+        for site1 in self.__map:
+            #faudra voir ql proportion est la plus grande vaut miex choisir la plus petite
+            if site1.get_identity():
+                for site2 in site1.get_neighbor():
+                    if not site2.get_identity():
+                        self.update_sum_of_energy(site1,site2)
+                        total+=exp(-(self.__sum_of_energy - energy_init)/(self.__temperature *1.38*(10**(-23))))
+                        i+=1
+                        stockage_sites_list.append((site1,site2))
+                        total_energy_sorted.append(total)
+                        self.update_sum_of_energy(site1,site2)
+        r=random()*total
+        i=fn.dicho_search(total_energy_sorted,r)
+        self.update_sum_of_energy(stockage_sites_list[i][0],stockage_sites_list[i][1])
+        return total_energy_sorted[len(total_energy_sorted)-1]
+        
+                        
+                        
+                        
+                        
+                        
+                        
+            
+                
 ############## FILE AKMC_func.py
 class Site:
     """Un site du systeme"""
