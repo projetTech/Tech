@@ -15,14 +15,21 @@ def dicho_search(L,a):
         if a > L[m] and a<=L[m+1]:
             return m
         elif a<=L[m]:
-            j=m-1
+            j=m
         else:
-            i=m+1
+            i=m
         m=(i+j)//2
     return i
             
+def site_selection (M,size):
+    index_a = M[randint(0,size-1)]
+    index_b = M[randint(0,size-1)]
+    while not (M[index_a].get_identity () ^ M[index_b].get_identity ()) :
+        index_b = M[randint(0,size-1)]
+    return index_a, index_b
+
             
-def monte_carlo(systeme,proportion_b,type,n):
+def monte_carlo(systeme,proportion_b,type_algo,n):
     t=0
     nombre_b = int(systeme.get_site_number()*proportion_b)
     
@@ -39,10 +46,13 @@ def monte_carlo(systeme,proportion_b,type,n):
         file1.writelines("{} {:3.1f} {:3.1f} 0 \n".format(i.get_identity(), *i.get_coordinate() ) ) 
     file1.close()
     
-    if type == "residence-time":
-        for i in range(n):
+    if type_algo == "residence-time":
+        for i in range(1):
             t+=systeme.config_choice()
-        #elif type =="metropolis":
+    elif type =="metropolis":
+        for i in range (1000):
+            t+=10**(-13)
+            systeme.one_step()
         #### à toi de compléter alexandre#######################""""
         file2= open("coordonnee2.txt","w")
         file2.writelines(str(systeme.get_site_number())+"\n")

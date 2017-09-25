@@ -8,7 +8,7 @@ Created on Tue Sep 12 17:49:18 2017
 from math import exp
 from random import random
 import functions as fn
-    
+from time import sleep
 class system :
     """ Un systeme composé d'une partie du matériau"""
     def __init__(self, size):
@@ -99,32 +99,32 @@ class system :
     def config_choice(self):
         energy_init=self.__sum_of_energy #l'énergie de la configuration initiale / self. ... à verifier la synthaxe 
         total=0
-        i=1
         stockage_sites_list=[]
         total_energy_sorted=[]
         for site1 in self.__map:
-            #faudra voir ql proportion est la plus grande vaut miex choisir la plus petite
             if site1.get_identity():
                 for site2 in site1.get_neighbor():
-                    if not site2.get_identity():
+                    #if not site2.get_identity():
+                    if True :
                         self.update_sum_of_energy(site1,site2)
                         total+=exp(-(self.__sum_of_energy - energy_init)/(self.__temperature *1.38*(10**(-23))))
-                        i+=1
                         stockage_sites_list.append((site1,site2))
                         total_energy_sorted.append(total)
                         self.update_sum_of_energy(site1,site2)
         r=random()*total
         i=fn.dicho_search(total_energy_sorted,r)
-        self.update_sum_of_energy(stockage_sites_list[i][0],stockage_sites_list[i][1])
-        return total_energy_sorted[len(total_energy_sorted)-1]
+        return total_energy_sorted[-1]
         
-                        
-                        
-                        
-                        
-                        
-                        
-            
+        
+    def one_step(self):
+        energy_init=self.__sum_of_energy 
+        index_a, index_b = fn.site_selection(self.__map, self.__site_number)
+        self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
+        proba = exp(-(self.__sum_of_energy - energy_init)/(self.__temperature *1.38*(10**(-23))))
+        if random() > proba:
+            self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
+        
+
                 
 ############## FILE AKMC_func.py
 class Site:

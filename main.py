@@ -12,18 +12,18 @@ a=time()
 import module_akmc as mc
 import functions as fn
 n=1000
-size = 15
+size = 3
 e_aa = 0
 e_ab = 0
-e_bb = 0.21
+e_bb = 0.21* 1.60*( 10**(-21))
 proportion_b = 0.5
 Temperature=297 #EN kelvin
 systeme = mc.system (size)
 systeme.set_maille([(0,0),(0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
-
-fn.monte_carlo(systeme,proportion_b,"residence-time",n)
+systeme.sum_of_energy_init ()
+fn.monte_carlo(systeme,proportion_b,"metropolis",n)
 #nombre_b = int(systeme.get_site_number()*proportion_b)
 #print (nombre_b)
 #while nombre_b > 0 :
