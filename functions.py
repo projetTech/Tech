@@ -22,10 +22,10 @@ def dicho_search(L,a):
     return i
             
 def site_selection (M,size):
-    index_a = M[randint(0,size-1)]
-    index_b = M[randint(0,size-1)]
-    while not (M[index_a].get_identity () ^ M[index_b].get_identity ()) :
-        index_b = M[randint(0,size-1)]
+    index_a = randint(0,size-1)
+    index_b = randint(0,size-1)
+    while M[index_a].get_identity() == M[index_b].get_identity () :
+        index_b = randint(0,size-1)
     return index_a, index_b
 
             
@@ -49,7 +49,7 @@ def monte_carlo(systeme,proportion_b,type_algo,n):
     if type_algo == "residence-time":
         for i in range(1):
             t+=systeme.config_choice()
-    elif type =="metropolis":
+    elif type_algo == "metropolis":
         for i in range (1000):
             t+=10**(-13)
             systeme.one_step()
