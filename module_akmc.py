@@ -26,8 +26,12 @@ class system :
     def get_size(self):
         return self.__size
     
-    def get_link_energy(self, link_energy):
+    def get_link_energy(self):
         return self.__link_energy
+    
+    def get_sum_of_energy(self):
+        return self.__sum_of_energy
+        
         
     def get_map (self):
         return self.__map
@@ -53,6 +57,10 @@ class system :
     
     def update_map (self, location, value):
         self.__map[location].set_identity(value)
+        self.__map[location].set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
+        for x in self.__map[location].get_neighbor():
+            x.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
+            
         
     def initiate_map (self):
         for x in range (self.__size) :
@@ -74,7 +82,7 @@ class system :
         #on peut faire le changement sans créer une nouvelle variable: 
             #site_a.set_identity(!site_a.set_identity) (vu qu'on change true à false ou inversement)
         tempo = site_a.get_identity()
-        site_a.set_identity(site_b.get_identity)
+        site_a.set_identity(site_b.get_identity())
         site_b.set_identity(tempo)
         
         #Actualisation des energies des voisins
@@ -107,20 +115,21 @@ class system :
                     #if not site2.get_identity():
                     if True :
                         self.update_sum_of_energy(site1,site2)
-                        total+=exp(-(self.__sum_of_energy - energy_init)/(self.__temperature *1.38*(10**(-23))))
+                        total+=exp(-(self.__sum_of_energy - energy_init)*11585/(self.__temperature))
                         stockage_sites_list.append((site1,site2))
                         total_energy_sorted.append(total)
                         self.update_sum_of_energy(site1,site2)
         r=random()*total
         i=fn.dicho_search(total_energy_sorted,r)
+        self.update_sum_of_energy(stockage_sites_list[i][0],stockage_sites_list[i][1])
         return total_energy_sorted[-1]
         
         
     def one_step(self):
         energy_init=self.__sum_of_energy 
-        index_a, index_b = fn.site_selection(self.__map, self.__site_number)
+        index_a, index_b = fn.site_selection(self.__map)
         self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
-        proba = exp(-(self.__sum_of_energy - energy_init)/(self.__temperature *1.38*(10**(-23))))
+        proba = exp(-(self.__sum_of_energy - energy_init)*11585/(self.__temperature ))#AJOUTER ATTRIBUT K
         if random() > proba:
             self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
         
@@ -129,7 +138,7 @@ class system :
 ############## FILE AKMC_func.py
 class Site:
     """Un site du systeme"""
-    def __init__(self, coordinate: tuple):
+    def __init__(self, coordinate= tuple):
         self.__coordinate = coordinate # coordinate of the site
         self.__identity = False # type of atom in this site
         self.__neighbor = [] 
@@ -141,7 +150,7 @@ class Site:
     def get_coordinate(self):
         return self.__coordinate
         
-    def set_identity(self, identity: bool):
+    def set_identity(self, identity= bool):
         self.__identity = identity 
     
     def set_neighbor(self, neighbor):
