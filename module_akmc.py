@@ -66,7 +66,9 @@ class system :
         for x in range (self.__size) :
             for y in range (self.__size):
                 for position in self.__maille :
-                    self.__map.append(Site((x+position[0],y+position[1]))) 
+                    i=Site((x+position[0],y+position[1]))
+                    self.__map.append(i) 
+
         self.set_site_number()
         # Neighbor management
         for site in self.__map:
@@ -117,9 +119,71 @@ class system :
         site_a.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         site_b.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         self.__sum_of_energy+= site_a.get_energy() + site_b.get_energy()
-        
-   
-       
+     
+    #cette fonction fait le calcul de la list des proba la première fois 
+    def config_choice_init(self):
+        energy_init=self.__sum_of_energy
+        total=0
+        stockage_sites_list=[]
+        total_energy_sorted=[]
+        for site1 in self.__map:
+            if site1.get_identity():
+                for site2 in site1.get_neighbor():
+                    if site2.get_identity()!=site1.get_identity():
+                        #pour être certain de ne pas citer un couple deux fois 
+                        if ((site1,site2) not in stockage_sites_list ) and ((site2,site1) not in stockage_sites_list ):
+                            A=site1.energy_change_type(self.__link_energy)
+                            B=site2.energy_change_type(self.__link_energy)
+                            new_energy=energy_init
+                            for i in range(len(A)-1):
+                                new_energy-=A[i][0].get_energy()+B[i][0].get_energy()-B[i][1]-A[i][1]
+                            new_energy-=site1.get_energy()+site2.get_energy()-A[-1]-B[-1]
+                            total+=exp(-(new_energy - energy_init)*11585/(self.__temperature))                   
+                            stockage_sites_list.append((site1,site2))
+                            total_energy_sorted.append(total)
+        r=random()*total
+        i=fn.dicho_search(total_energy_sorted,r)
+        self.exchange(stockage_sites_list[i][0],stockage_sites_list[i][1])
+        return([stockage_sites_list[i],stockage_sites_list,total_energy_sorted])
+    
+    #elle donne le prochain pas à partir de la connaissance du dernier pas et de la liste des proba
+    def config_choice_rec(self,couple_changed,stockage_sites_list,total_energy_sorted): #couple_changed=numbers_sites[i] obtenu avec la fonction précédente
+        #je mets à jour ma liste de proba classé et de sites correspondants. le but est de ne pas tout recalculé vus que le nombre de proba qui change ne dépasse pas 8  
+        energy_init=self.__sum_of_energy
+        A=couple_changed[0].get_neighbor()
+        B=couple_changed[1].get_neighbor()
+        for i in range(len(A)):
+            #s'ils étaient d'identités différentes 
+            if couple_changed[0].get_identity() != A[i].get_identity(): #j'enlève les anciens potentiels changeables couples de voisins 
+                j=stockage_sites_list.find((couple_changed[0],A[i]))+1+stockage_sites_list.find((A[i],couple_changed[0]))# s'il ne trouve pas le premier couple il renvoie -1, mais il trouvera certainement le 2
+                #enlever tous la proba de l'échange fait aux sommes des proba qui suivent dans la liste
+                
+                stockage_sites_list.remove(j)
+                if j!=0:
+                    proba_exchange_done=total_energy_sorted[j]-total_energy_sorted[j-1]
+                else: 
+                    proba_exchange_done=total_energy_sorted[j]
+                for k in range(j+1,len(total_energy_sorted)):
+                    total_energy_sorted[k]-=proba_exchange_done
+                total_energy_sorted.remove(j)
+            else:
+                #on calcul proba d'échange on l'ajoute à total et on le met à la fin de la list des proba classées
+                #s'ils sont devenu d'identité différentes j'ajoute leur proba d'échange
+                C=couple_changed[0].energy_change_type(self.__link_energy)
+                D=A[i].energy_change_type(self.__link_energy)
+                new_energy=energy_init
+                for i in range(len(C)-1):
+                    new_energy-=C[i][0].get_energy()+B[i][0].get_energy()-D[i][1]-C[i][1]
+                new_energy-=couple_changed[0].get_energy()+A[i].get_energy()-C[-1]-D[-1]
+                total=exp(-(new_energy - energy_init)*11585/(self.__temperature))+total_energy_sorted[-1]
+                total_energy_sorted.append(total)
+                stockage_sites_list.append((couple_changed[0],A[i]))
+            #le choix de l'échange à effectuer
+        r=random()*total
+        i=fn.dicho_search(total_energy_sorted,r)
+        self.exchange(stockage_sites_list[i][0][0],stockage_sites_list[i][1][0])
+        return([stockage_sites_list[i],stockage_sites_list,total_energy_sorted])
+    
     def config_choice(self):
         energy_init=self.__sum_of_energy #l'énergie de la configuration initiale / self. ... à verifier la synthaxe 
         total=0
@@ -159,7 +223,9 @@ class Site:
         self.__identity = False # type of atom in this site
         self.__neighbor = [] 
         self.__energy = None # local energy of this site 
-        
+
+
+    
     def get_identity(self):
         return self.__identity
         
@@ -171,6 +237,8 @@ class Site:
     
     def set_neighbor(self, neighbor):
         self.__neighbor = neighbor
+    
+
         
     def set_energy (self, e_aa, e_ab, e_bb) :
         self.__energy = 0
@@ -188,6 +256,7 @@ class Site:
                     self.__energy += e_aa
                     self.__energy*=0.5
             
+   
     def initiate_neighbor (self, system, size, e_aa, e_ab, e_bb) :
         for i in system :
             if pbc (self, i, size) == [0.5,0.5]:
@@ -206,7 +275,7 @@ class Site:
     #cette fonction rend la nouvelle énergie des voisins d'un site si on change le type de celui-ci
     def energy_change_type(self, Link_energy):
         #Link_energy=[eaa,eab,abb]
-        energy_site_neghbors=[]
+        list_energy=[]
         energy_site=0
         for i in self.neghbor:
             energy_i=i.get_energy()
@@ -223,8 +292,9 @@ class Site:
                     energy_i+= Link_energy[1]-Link_energy[2]
                 else:
                     energy_i+=Link_energy[1]-Link_energy[0]
-            energy_site_neghbors.append([i,energy_i])
-        energy_site_neghbors.append(energy_site)
+            list_energy.append([i,energy_i])
+        list_energy.append(energy_site)
+        return list_energy
         
 
     

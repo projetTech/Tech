@@ -29,6 +29,8 @@ def site_selection (M):
         index_b = randint(0,len(M)-1)
     return index_a, index_b
 
+
+
 # type=1 pour temps de résidence et =2 pour metropolis
             
 def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variables
