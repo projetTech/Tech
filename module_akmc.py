@@ -75,12 +75,28 @@ class system :
     def sum_of_energy_init (self):
         for site in self.__map :
             self.__sum_of_energy += site.get_energy()
-            
+    #fonction échange de deux sites (avec energy_change_typeelle peut remplacer update_sum_o_energy)
+    #à utiliser avec algo temps de résidence
+    def exchange(self, site_a, site_b):
+        tempo = site_a.get_identity()
+        site_a.set_identity(site_b.get_identity())
+        site_b.set_identity(tempo)
+        A=site_a.energy_change_type(self.__link_energy)
+        B=site_b.energy_change_type(self.__link_energy)
+        self.__sum_of_energy-= site_a.get_energy() + site_b.get_energy()
+        for i in range(len(A)-1):
+            self.__sum_of_energy-= i.get_energy()
+            i[0].set_energy(i[1])
+            self.__sum_of_energy+= i[1]
+        for i in range(len(B)-1):
+            self.__sum_of_energy-= i.get_energy()
+            i[0].set_energy(i[1])
+            self.__sum_of_energy+= i[1]
+        self.__sum_of_energy+=A[-1]+B[-1]
+        
    
     def update_sum_of_energy (self, site_a, site_b):
         #Echange des identités des sites
-        #on peut faire le changement sans créer une nouvelle variable: 
-            #site_a.set_identity(!site_a.set_identity) (vu qu'on change true à false ou inversement)
         tempo = site_a.get_identity()
         site_a.set_identity(site_b.get_identity())
         site_b.set_identity(tempo)
@@ -103,7 +119,7 @@ class system :
         self.__sum_of_energy+= site_a.get_energy() + site_b.get_energy()
         
    
-        
+       
     def config_choice(self):
         energy_init=self.__sum_of_energy #l'énergie de la configuration initiale / self. ... à verifier la synthaxe 
         total=0
@@ -186,6 +202,30 @@ class Site:
         
     def get_energy (self):
         return self.__energy
+
+    #cette fonction rend la nouvelle énergie des voisins d'un site si on change le type de celui-ci
+    def energy_change_type(self, Link_energy):
+        #Link_energy=[eaa,eab,abb]
+        energy_site_neghbors=[]
+        energy_site=0
+        for i in self.neghbor:
+            energy_i=i.get_energy()
+            if self.__identity!=i.get_identity:
+                if self.__identity:
+                    energy_site+=Link_energy[0]
+                    energy_i+= Link_energy[0]-Link_energy[1]
+                else:
+                    energy_site+=Link_energy[2]
+                    energy_i+=Link_energy[2]-Link_energy[1]
+            else:
+                energy_site+=Link_energy[1]
+                if self.__identity:
+                    energy_i+= Link_energy[1]-Link_energy[2]
+                else:
+                    energy_i+=Link_energy[1]-Link_energy[0]
+            energy_site_neghbors.append([i,energy_i])
+        energy_site_neghbors.append(energy_site)
+        
 
     
 def pbc (a, b, size) :
