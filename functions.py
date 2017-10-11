@@ -31,7 +31,7 @@ def site_selection (M):
 
 
 
-# type=1 pour temps de résidence et =2 pour metropolis
+# type=1 pour temps de résidence et =2 pour metropolis, type=3 pour tester les nouvelles fonctions qui peuvent remplacer update_energy
             
 def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variables
     t=0
@@ -65,6 +65,12 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
         for i in range (n):
             t+=10**(-13)
             systeme.one_step()
+            L.append(systeme.get_sum_of_energy())
+            T.append(t)
+    elif type_algo==3:
+        for i in range (n):
+            t+=10**(-13)
+            systeme.one_step_1()
             L.append(systeme.get_sum_of_energy())
             T.append(t)
             

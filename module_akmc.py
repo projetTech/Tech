@@ -19,9 +19,13 @@ class system :
         self.__link_energy =[] 
         self.__site_number = 0
         self.__temperature=297
-    #Get function
+        self.__k_Boltzmann=11585
+        
+    #Get functions
     def get_temperature(self):
         return self.__temperature
+    def get_k_Boltzmann(self):
+        return self.__k_Boltzmann
     
     def get_size(self):
         return self.__size
@@ -42,26 +46,29 @@ class system :
     def get_site_number (self):
         return self.__site_number
         
-    #Set function
+    #Set functions
     def set_link_energy(self, link_energy):
         self.__link_energy = link_energy
     
     def set_temperature(self,temperature):
         self.__temperature = temperature
+    
+    def set_k_Boltzmann(self,k):
+        self.__k_Boltzmann = k
         
     def set_maille(self, maille):
         self.__maille = maille
         
     def set_site_number(self):
         self.__site_number = len(self.__map)
-    
+
+    #classes' methods    
     def update_map (self, location, value):
         self.__map[location].set_identity(value)
         self.__map[location].set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         for x in self.__map[location].get_neighbor():
             x.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
-            
-        
+                
     def initiate_map (self):
         for x in range (self.__size) :
             for y in range (self.__size):
@@ -79,21 +86,25 @@ class system :
             self.__sum_of_energy += site.get_energy()
     #fonction échange de deux sites (avec energy_change_typeelle peut remplacer update_sum_o_energy)
     #à utiliser avec algo temps de résidence
-    def exchange(self, site_a, site_b):
+    def exchange(self, site_a, site_b):#to exchange two sites, we have to exchange their identities and update sites' energy 
+        #exchanging identities
         tempo = site_a.get_identity()
         site_a.set_identity(site_b.get_identity())
         site_b.set_identity(tempo)
+        
+        #getting the new vector of site's and neighbors energy for each site
         A=site_a.energy_change_type(self.__link_energy)
         B=site_b.energy_change_type(self.__link_energy)
-        self.__sum_of_energy-= site_a.get_energy() + site_b.get_energy()
+        #updating the energy of each site and its neighbors
+        self.__sum_of_energy -= site_a.get_energy() + site_b.get_energy()
         for i in range(len(A)-1):
-            self.__sum_of_energy-= i.get_energy()
-            i[0].set_energy(i[1])
-            self.__sum_of_energy+= i[1]
+            self.__sum_of_energy-= A[i][0].get_energy()
+            A[i][0].set_energy1(A[i][1])
+            self.__sum_of_energy+= A[i][1]
         for i in range(len(B)-1):
-            self.__sum_of_energy-= i.get_energy()
-            i[0].set_energy(i[1])
-            self.__sum_of_energy+= i[1]
+            self.__sum_of_energy-= B[i][0].get_energy()
+            B[i][0].set_energy1(B[i][1])
+            self.__sum_of_energy+= B[i][1]
         self.__sum_of_energy+=A[-1]+B[-1]
         
    
@@ -203,7 +214,23 @@ class system :
         i=fn.dicho_search(total_energy_sorted,r)
         self.update_sum_of_energy(stockage_sites_list[i][0],stockage_sites_list[i][1])
         return total_energy_sorted[-1]
-        
+    #one_step en utilisant deux fonctions aux lieux de update   
+    def one_step_1(self):
+        energy_init=self.__sum_of_energy 
+        index_a, index_b = fn.site_selection(self.__map)
+        A=self.__map[index_a].energy_change_type(self.__link_energy)
+        B=self.__map[index_b].energy_change_type(self.__link_energy)
+        energy_if_exchange=energy_init
+        energy_if_exchange -= self.__map[index_a].get_energy() + self.__map[index_b].get_energy()
+        for i in range(len(A)-1):
+            energy_if_exchange-= A[i][0].get_energy()-A[i][1]
+        for i in range(len(B)-1):
+             energy_if_exchange-= B[i][0].get_energy()-B[i][1]
+        energy_if_exchange+=A[-1]+B[-1]
+        proba = exp(-(energy_if_exchange - energy_init)*self.__k_Boltzmann/(self.__temperature ))#AJOUTER ATTRIBUT K
+        if random() < proba:
+            self.exchange(self.__map[index_a],self.__map[index_b])
+          
         
     def one_step(self):
         energy_init=self.__sum_of_energy 
@@ -231,6 +258,12 @@ class Site:
         
     def get_coordinate(self):
         return self.__coordinate
+    
+    def get_neighbor(self):
+        return self.__neighbor
+    
+    def get_energy (self):
+        return self.__energy
         
     def set_identity(self, identity= bool):
         self.__identity = identity 
@@ -238,7 +271,8 @@ class Site:
     def set_neighbor(self, neighbor):
         self.__neighbor = neighbor
     
-
+    def set_energy1(self,energy):
+        self.__energy=energy
         
     def set_energy (self, e_aa, e_ab, e_bb) :
         self.__energy = 0
@@ -266,18 +300,15 @@ class Site:
         else :
             self.set_energy(e_aa,e_ab,e_bb)
     
-    def get_neighbor (self):
-        return self.__neighbor
-        
-    def get_energy (self):
-        return self.__energy
 
-    #cette fonction rend la nouvelle énergie des voisins d'un site si on change le type de celui-ci
+    
+
+    #cette fonction rend la nouvelle énergie de chaque voisin d'un site si on change son type 
     def energy_change_type(self, Link_energy):
         #Link_energy=[eaa,eab,abb]
         list_energy=[]
         energy_site=0
-        for i in self.neghbor:
+        for i in self.__neighbor:
             energy_i=i.get_energy()
             if self.__identity!=i.get_identity:
                 if self.__identity:

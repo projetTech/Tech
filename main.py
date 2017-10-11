@@ -25,7 +25,9 @@ systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
 #systeme.sum_of_energy_init ()
 
-fn.monte_carlo(systeme,proportion_b,1,n)
+#fn.monte_carlo(systeme,proportion_b,2,n)
+#fn.monte_carlo(systeme,proportion_b,1,n)
+fn.monte_carlo(systeme,proportion_b,3,n)
 
 
 
