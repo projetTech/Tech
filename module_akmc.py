@@ -36,7 +36,6 @@ class system :
     def get_sum_of_energy(self):
         return self.__sum_of_energy
         
-        
     def get_map (self):
         return self.__map
         
@@ -86,6 +85,7 @@ class system :
             self.__sum_of_energy += site.get_energy()
     #fonction échange de deux sites (avec energy_change_typeelle peut remplacer update_sum_o_energy)
     #à utiliser avec algo temps de résidence
+            
     def exchange(self, site_a, site_b):#to exchange two sites, we have to exchange their identities and update sites' energy 
         #exchanging identities
         tempo = site_a.get_identity()
@@ -310,7 +310,7 @@ class Site:
         energy_site=0
         for i in self.__neighbor:
             energy_i=i.get_energy()
-            if self.__identity!=i.get_identity:
+            if self.__identity!=i.get_identity():
                 if self.__identity:
                     energy_site+=Link_energy[0]
                     energy_i+= Link_energy[0]-Link_energy[1]
