@@ -12,8 +12,8 @@ from time import time
 a=time()
 import module_akmc as mc
 import functions as fn
-n=1000
-size = 5
+n=10000
+size = 10
 e_aa = 0
 e_ab = 0
 e_bb = 0.21
