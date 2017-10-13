@@ -98,14 +98,14 @@ class system :
         #updating the energy of each site and its neighbors
         self.__sum_of_energy -= site_a.get_energy() + site_b.get_energy()
         for i in range(len(A)-1):
-            self.__sum_of_energy-= A[i][0].get_energy()
+            self.__sum_of_energy-= A[i][0].get_energy()-A[i][1]
             A[i][0].set_energy1(A[i][1])
-            self.__sum_of_energy+= A[i][1]
         for i in range(len(B)-1):
-            self.__sum_of_energy-= B[i][0].get_energy()
+            self.__sum_of_energy-= B[i][0].get_energy()- B[i][1]
             B[i][0].set_energy1(B[i][1])
-            self.__sum_of_energy+= B[i][1]
         self.__sum_of_energy+=A[-1]+B[-1]
+        site_a.set_energy1(A[-1])
+        site_b.set_energy1(B[-1])
         
    
     def update_sum_of_energy (self, site_a, site_b):
@@ -228,7 +228,7 @@ class system :
              energy_if_exchange-= B[i][0].get_energy()-B[i][1]
         energy_if_exchange+=A[-1]+B[-1]
         proba = exp(-(energy_if_exchange - energy_init)*self.__k_Boltzmann/(self.__temperature ))#AJOUTER ATTRIBUT K
-        if random() < proba:
+        if random() <= proba:
             self.exchange(self.__map[index_a],self.__map[index_b])
           
         
@@ -236,7 +236,7 @@ class system :
         energy_init=self.__sum_of_energy 
         index_a, index_b = fn.site_selection(self.__map)
         self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
-        proba = exp(-(self.__sum_of_energy - energy_init)*11585/(self.__temperature ))#AJOUTER ATTRIBUT K
+        proba = exp(-(self.__sum_of_energy - energy_init)*self.__k_Boltzmann/(self.__temperature ))#AJOUTER ATTRIBUT K
         if random() > proba:
             self.update_sum_of_energy(self.__map[index_a],self.__map[index_b])
         
@@ -327,8 +327,7 @@ class Site:
         list_energy.append(energy_site)
         return list_energy
         
-
-    
+   
 def pbc (a, b, size) :
     c=[0,0]
     for i in range(2):
@@ -336,3 +335,5 @@ def pbc (a, b, size) :
         abs(a.get_coordinate()[i] - b.get_coordinate()[i] - size),
         abs(a.get_coordinate()[i] - b.get_coordinate()[i] + size)])
     return c
+
+ 

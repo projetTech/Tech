@@ -28,6 +28,7 @@ systeme.initiate_map ()
 #fn.monte_carlo(systeme,proportion_b,2,n)
 #fn.monte_carlo(systeme,proportion_b,1,n)
 fn.monte_carlo(systeme,proportion_b,3,n)
+print(systeme.get_sum_of_energy())
 
 
 

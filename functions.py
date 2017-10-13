@@ -28,8 +28,8 @@ def site_selection (M):
     while M[index_a].get_identity() == M[index_b].get_identity () :
         index_b = randint(0,len(M)-1)
     return index_a, index_b
-
-
+ 
+ 
 
 # type=1 pour temps de résidence et =2 pour metropolis, type=3 pour tester les nouvelles fonctions qui peuvent remplacer update_energy
             
@@ -73,6 +73,12 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             systeme.one_step_1()
             L.append(systeme.get_sum_of_energy())
             T.append(t)
+    elif type_algo==4:#nouvelle version de temsp de résidence
+        new_sys=systeme.config_choice_init()[-1][-1]
+        t=new_sys[-1][-1]
+        
+        
+        
             
     else:
         print("incorrect type")
