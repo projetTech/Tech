@@ -8,7 +8,59 @@ Created on Tue Sep 12 17:49:18 2017
 from math import exp
 from random import random
 import functions as fn
-from time import sleep
+import matplotlib.pyplot as plt
+
+""" classe interaction
+fonction : energie d'interaction entre 2 espèces 
+"""
+
+
+""" classe espèce
+fonction : peut s'échanger avec
+fonction : peut aller dans tel site ( gestion de sites intersticiels et autres)
+"""
+
+
+class measure :
+    """ Un systeme composé d'une partie du matériau"""
+    def __init__(self, number_of_iteration=1000):
+        self.__time = []
+        self.__energy_of_system = []
+        self.__number_of_exchange = []
+        self.__rate_of_exchange = []
+        self.__number_of_iteration = number_of_iteration
+        
+    
+    def print_energy_over_time (self):
+        plt.plot( self.__time, self.__energy_of_system)
+        plt.xlabel('Time')
+        plt.ylabel('Energy')
+        plt.title("Energy over time")
+        plt.show()
+    
+    def save_energy_over_time (self, name="") :
+        plt.plot( self.__time, self.__energy_of_system)
+        plt.xlabel('Time')
+        plt.ylabel('Energy')
+        plt.title("Energy over time")
+        plt.savefig("Energy_over_time_"+name)
+    
+    def increment_exchange (self):
+        self.__number_of_exchange += 1
+        self.__rate_of_exchange += 1/ self.__number_of_iteration
+
+""" Coefficient de diffusion"""
+
+
+""" Paramètre d'ordre
+Mesure la probabilité dans la boite qu'il y ait un atome de type a à coté d'un atome de type b
+Warren coweny
+"""
+
+
+
+
+
 class system :
     """ Un systeme composé d'une partie du matériau"""
     def __init__(self, size):
@@ -67,13 +119,17 @@ class system :
         self.__map[location].set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
         for x in self.__map[location].get_neighbor():
             x.set_energy(self.__link_energy[0],self.__link_energy[1],self.__link_energy[2])
-                
+            
+            
+#Utiliser des fonctions recursives pour gérer le problème du nombre de boucle for   
+   
     def initiate_map (self):
         for x in range (self.__size) :
             for y in range (self.__size):
-                for position in self.__maille :
-                    i=Site((x+position[0],y+position[1]))
-                    self.__map.append(i) 
+                for z in range (self.__size) :
+                    for position in self.__maille :
+                        i=Site((x+position[0],y+position[1],z+position[2]))
+                        self.__map.append(i) 
 
         self.set_site_number()
         # Neighbor management
@@ -265,7 +321,7 @@ class Site:
     def get_energy (self):
         return self.__energy
         
-    def set_identity(self, identity= bool):
+    def set_identity(self, identity= int):
         self.__identity = identity 
     
     def set_neighbor(self, neighbor):
@@ -278,9 +334,9 @@ class Site:
         self.__energy = 0
         if self.__identity:
             for i in self.__neighbor :
-                if i.get_identity() :
+                if i.get_identity():
                     self.__energy += e_bb
-                else :
+                else : # Arbitraire, a changer
                     self.__energy += e_ab
         else:
             for i in self.__neighbor :
@@ -290,12 +346,16 @@ class Site:
                     self.__energy += e_aa
                     self.__energy*=0.5
             
+    def set_energy_2 (self, energy_of_link) :
+        for i in self.__neighbor :
+            self.__energy += energy_of_link[self.get_identity()][i.get_identity()]
+   
    
     def initiate_neighbor (self, system, size, e_aa, e_ab, e_bb) :
         for i in system :
-            if pbc (self, i, size) == [0.5,0.5]:
+            if pbc (self, i, size) == [0.5,0.5,0.5]:
                 self.__neighbor.append(i)
-        if len(self.__neighbor)!=4:
+        if len(self.__neighbor)!=8:
             print("Error : bad number of neighbor")
         else :
             self.set_energy(e_aa,e_ab,e_bb)
@@ -329,8 +389,8 @@ class Site:
         
    
 def pbc (a, b, size) :
-    c=[0,0]
-    for i in range(2):
+    c=[0,0,0]
+    for i in range(3):
         c[i]=min([abs(a.get_coordinate()[i]-b.get_coordinate()[i]),
         abs(a.get_coordinate()[i] - b.get_coordinate()[i] - size),
         abs(a.get_coordinate()[i] - b.get_coordinate()[i] + size)])

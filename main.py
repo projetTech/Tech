@@ -6,28 +6,31 @@ Created on Fri Sep 15 23:44:20 2017
 """
 
 
+
 ############## FILE AKMC_test1.py
 from time import time
 
 a=time()
 import module_akmc as mc
 import functions as fn
-n=10000
-size = 10
+
+
+n=1000
+size = 4
 e_aa = 0
-e_ab = 0
-e_bb = 0.21
+e_ab = 0.21
+e_bb = 0
 proportion_b = 0.5
 Temperature=297 #EN kelvin
 systeme = mc.system (size)
-systeme.set_maille([(0,0),(0.5,0.5)])
+systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
 #systeme.sum_of_energy_init ()
 
 #fn.monte_carlo(systeme,proportion_b,2,n)
 #fn.monte_carlo(systeme,proportion_b,1,n)
-fn.monte_carlo(systeme,proportion_b,3,n)
+fn.monte_carlo(systeme,proportion_b,1,n)
 print(systeme.get_sum_of_energy())
 
 

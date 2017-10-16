@@ -7,6 +7,7 @@ Created on Wed Sep 20 21:10:54 2017
 #import module_akmc as mc
 import matplotlib.pyplot as plt 
 from random import randint
+from mpl_toolkits.mplot3d import Axes3D
 ## reverifer les indices
 def dicho_search(L,a):
     i=0
@@ -45,6 +46,8 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             systeme.update_map(i,True)
     systeme.sum_of_energy_init ()
     
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
     
     file1= open("coordonnee1.txt","w")
     file1.writelines(str(systeme.get_site_number())+"\n")
@@ -52,8 +55,8 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
     for i in systeme.get_map() :
         file1.writelines("{} {:3.1f} {:3.1f} 0 \n".format(i.get_identity(), *i.get_coordinate() ) ) 
     file1.close()
-    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],s=100,marker="o",c='r')
-    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],s=100,marker="o",c='b')
+    ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
+    ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if not a.get_identity()],s=20,marker="o",c='b')
     plt.show()
     #systeme.type_algo() 
     if type_algo == 1:#"residence-time"
@@ -82,14 +85,16 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             
     else:
         print("incorrect type")
-    
-    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],s=100,marker="o",c='r')
-    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],s=100,marker="o",c='b')
-    plt.show()  
-    plt.plot(T,L)
-    plt.xlabel('temps')
-    plt.ylabel('energy')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
+    ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if not a.get_identity()],s=20,marker="o",c='b')
     plt.show()
+#    
+#    plt.plot(T,L)
+#    plt.xlabel('temps')
+#    plt.ylabel('energy')
+#    plt.show()
     file2= open("coordonnee2.txt","w")
     file2.writelines(str(systeme.get_site_number())+"\n")
     file2.writelines("\n")
