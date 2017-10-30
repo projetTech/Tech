@@ -9,11 +9,15 @@ from math import exp
 from random import random
 import functions as fn
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 import numpy as np
+=======
+>>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
 
 """ classe interaction
 fonction : energie d'interaction entre 2 espèces 
 """
+<<<<<<< HEAD
 class species :
     def __init__(self,identity="gap",diameter):
         self.__identity= identity
@@ -55,6 +59,9 @@ class species :
         
         
         
+=======
+
+>>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
 
 """ classe espèce
 fonction : peut s'échanger avec

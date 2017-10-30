@@ -10,6 +10,7 @@ False 0.5 0.5 0
 False 0.0 0.0 0 
 True 0.5 0.5 0 
 False 0.0 0.0 0 
+<<<<<<< HEAD
 True 0.5 0.5 0 
 False 0.0 0.0 0 
 False 0.5 0.5 0 
@@ -26,6 +27,11 @@ False 0.5 0.5 0
 True 0.0 0.0 0 
 True 0.5 0.5 0 
 >>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
+=======
+False 0.5 0.5 0 
+True 0.0 0.0 0 
+True 0.5 0.5 0 
+>>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
 False 0.0 1.0 0 
 True 0.5 1.5 0 
 True 0.0 1.0 0 
@@ -38,6 +44,7 @@ True 0.0 2.0 0
 False 0.5 2.5 0 
 True 0.0 2.0 0 
 False 0.5 2.5 0 
+<<<<<<< HEAD
 <<<<<<< HEAD
 False 0.0 2.0 0 
 True 0.5 2.5 0 
@@ -325,6 +332,44 @@ False 3.0 3.0 0
 True 3.5 3.5 0 
 >>>>>>> 96bf0065d10fb3081a705c409178f568d405eaca
 =======
+False 2.0 2.0 0 
+False 2.5 2.5 0 
+>>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
+=======
+False 1.0 0.0 0 
+False 1.5 0.5 0 
+False 1.0 0.0 0 
+False 1.5 0.5 0 
+False 1.0 0.0 0 
+True 1.5 0.5 0 
+False 1.0 1.0 0 
+True 1.5 1.5 0 
+False 1.0 1.0 0 
+True 1.5 1.5 0 
+False 1.0 1.0 0 
+True 1.5 1.5 0 
+True 1.0 2.0 0 
+False 1.5 2.5 0 
+True 1.0 2.0 0 
+True 1.5 2.5 0 
+True 1.0 2.0 0 
+False 1.5 2.5 0 
+False 2.0 0.0 0 
+False 2.5 0.5 0 
+False 2.0 0.0 0 
+True 2.5 0.5 0 
+False 2.0 0.0 0 
+True 2.5 0.5 0 
+False 2.0 1.0 0 
+True 2.5 1.5 0 
+False 2.0 1.0 0 
+True 2.5 1.5 0 
+True 2.0 1.0 0 
+True 2.5 1.5 0 
+True 2.0 2.0 0 
+True 2.5 2.5 0 
+True 2.0 2.0 0 
+False 2.5 2.5 0 
 False 2.0 2.0 0 
 False 2.5 2.5 0 
 >>>>>>> 1cac07af81c2c8a1c461ff1b6045624f858ade08
