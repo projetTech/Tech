@@ -10,6 +10,41 @@ from random import random
 import functions as fn
 import matplotlib.pyplot as plt
 
+import numpy as np
+
+
+""" classe interaction
+fonction : energie d'interaction entre 2 espèces 
+"""
+
+class species :
+def __init__(self,identity="gap",diameter):
+self.__identity= identity
+self.__diameter = diameter
+self.__links_energy =[]
+self.__exchange_species = []
+def get_diameter(self):
+return self.__diameter
+def get_links_energy(self):
+return self.__links_energy
+def get_exchange_species(self):
+return self.__exchange_species
+def get_identity(self):
+return self.__identity
+def set_diameter(self,diameter):
+self.__diameter= diameter
+def set_links_species(self,specie,link_energy):
+self.__links_energy.append(link_energy)
+self.__exchange_species.append(specie)
+def authorized_sites(self,site,size_systeme):
+neighbors = site.get_neighbors()
+distance = []
+for i in neighbors:
+for j in neighbors:
+distance.append(np.linalg.norm(pbc(i,j,size))
+return (min(distance) > self.__diameter) 
+
+
 """ classe espèce
 fonction : peut s'échanger avec
 fonction : peut aller dans tel site ( gestion de sites intersticiels et autres)
