@@ -14,9 +14,9 @@ def dicho_search(L,a):
     j=len(L)-1
     m=(i+j)//2
     while i < j:
-        if a >= L[m] and a<L[m+1]:
-            return m
-        elif a<L[m]:
+        if a > L[m] and a<=L[m+1]:
+            return m+1
+        elif a<=L[m]:
             j=m
         else:
             i=m+1
@@ -29,9 +29,17 @@ def site_selection (M):
     while M[index_a].get_identity() == M[index_b].get_identity () :
         index_b = randint(0,len(M)-1)
     return index_a, index_b
- 
- 
 
+ #avoir l'energie de liaison enre deux sites
+def get_link_energy(List_of_links,siteA,siteB):
+    #list_of_links=[eaa,eab,ebb]
+    if siteB.get_identity()==siteA.get_identity():
+        if siteB.get_identity():
+            return List_of_links[2]
+        else:
+            return List_of_links[0]
+    else:
+        return List_of_links[1]
 # type=1 pour temps de résidence et =2 pour metropolis, type=3 pour tester les nouvelles fonctions qui peuvent remplacer update_energy
             
 def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variables
@@ -46,19 +54,23 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             systeme.update_map(i,True)
     systeme.sum_of_energy_init ()
     
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    
+   
     file1= open("coordonnee1.txt","w")
     file1.writelines(str(systeme.get_site_number())+"\n")
     file1.writelines("\n")
     for i in systeme.get_map() :
         file1.writelines("{} {:3.1f} {:3.1f} 0 \n".format(i.get_identity(), *i.get_coordinate() ) ) 
     file1.close()
-    ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
+    
+    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],s=100,marker="o",c='r')		    
+    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],s=100,marker="o",c='b')		    
+    plt.show()  		     
+    	     
+   
+    """ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
     ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if not a.get_identity()],s=20,marker="o",c='b')
-    plt.show()
-    #systeme.type_algo() 
+    plt.show()"""
+
     if type_algo == 1:#"residence-time"
         for i in range(n):
             t+=systeme.config_choice()
@@ -76,25 +88,36 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             systeme.one_step_1()
             L.append(systeme.get_sum_of_energy())
             T.append(t)
-    elif type_algo==4:#nouvelle version de temsp de résidence
-        new_sys=systeme.config_choice_init()[-1][-1]
-        t=new_sys[-1][-1]
+    elif type_algo==4:#nouvelle version de temps de résidence
+        new_sys=systeme.config_choice_init()
+        t+=new_sys[-1][-1]#total_energy_sorted[-1]
+        L.append(systeme.get_sum_of_energy())
+        T.append(t)
+        for i in range (n):
+            new_sys=systeme.config_choice_rec(new_sys[0],new_sys[1],new_sys[2])
+            t+=new_sys[-1][-1]#total_energy_sorted[-1]
+            L.append(systeme.get_sum_of_energy())
+            T.append(t)
         
         
         
             
     else:
         print("incorrect type")
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
     ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if not a.get_identity()],s=20,marker="o",c='b')
+    plt.show()"""
+    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],s=100,marker="o",c='r')		    
+    plt.scatter([a.get_coordinate()[0] for a in systeme.get_map() if not a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if not a.get_identity()],s=100,marker="o",c='b')		    
+    plt.show()  		     
+    	     
+    plt.plot(T,L)
+    plt.xlabel('temps')
+    plt.ylabel('energy')
     plt.show()
-#    
-#    plt.plot(T,L)
-#    plt.xlabel('temps')
-#    plt.ylabel('energy')
-#    plt.show()
     file2= open("coordonnee2.txt","w")
     file2.writelines(str(systeme.get_site_number())+"\n")
     file2.writelines("\n")

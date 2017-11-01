@@ -23,15 +23,16 @@ e_bb = 0
 proportion_b = 0.5
 Temperature=297 #EN kelvin
 systeme = mc.system (size)
-systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
+systeme.set_maille([(0,0),(0.5,0.5)])
+#systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
 #systeme.sum_of_energy_init ()
 
 #fn.monte_carlo(systeme,proportion_b,2,n)
 #fn.monte_carlo(systeme,proportion_b,1,n)
-fn.monte_carlo(systeme,proportion_b,1,n)
-print(systeme.get_sum_of_energy())
+fn.monte_carlo(systeme,proportion_b,4,n)
+print("final energy =" , float(systeme.get_sum_of_energy()))
 
 
 
