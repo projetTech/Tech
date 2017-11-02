@@ -15,40 +15,25 @@ import module_akmc as mc
 import functions as fn
 
 
-n=1000
-size = 4
+n_bloc=100
+n_ite = 100000
+scale=2
+size = 10
+dimension = 3
 e_aa = 0
 e_ab = 0.21
 e_bb = 0
 proportion_b = 0.5
 Temperature=297 #EN kelvin
-systeme = mc.system (size)
-systeme.set_maille([(0,0),(0.5,0.5)])
-#systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
+systeme = mc.system (size,dimension)
+systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
-#systeme.sum_of_energy_init ()
-
-#fn.monte_carlo(systeme,proportion_b,2,n)
-#fn.monte_carlo(systeme,proportion_b,1,n)
-fn.monte_carlo(systeme,proportion_b,2,n)
-print("final energy =" , float(systeme.get_sum_of_energy()))
+print ("Système crée en ", time()-a, " secondes")
+fn.monte_carlo(systeme,proportion_b,3,n_bloc,n_ite,scale)
+print(systeme.get_sum_of_energy())
 
 
 
-#nombre_b = int(systeme.get_site_number()*proportion_b)
-#print (nombre_b)
-#while nombre_b > 0 :
- #   n = randint(0,systeme.get_site_number()-1) # tirage d'un site au hasard
-  #  if not systeme.get_map()[n].get_identity() : #
-   #     nombre_b -= 1
-    #    systeme.update_map(n,True)
-        
 
-#file= open("coordonnee.txt","w")
-#file.writelines(str(systeme.get_site_number())+"\n")
-#file.writelines("\n")
-#for i in systeme.get_map() :
- #   file.writelines("{} {:3.1f} {:3.1f} 0 \n".format(i.get_identity(), *i.get_coordinate() ) )
-
-print (time()-a)
+print ("Fin de la simulation. Elle aura durée ",time()-a, " secondes")
