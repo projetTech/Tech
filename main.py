@@ -31,7 +31,7 @@ systeme.initiate_map ()
 
 #fn.monte_carlo(systeme,proportion_b,2,n)
 #fn.monte_carlo(systeme,proportion_b,1,n)
-fn.monte_carlo(systeme,proportion_b,4,n)
+fn.monte_carlo(systeme,proportion_b,2,n)
 print("final energy =" , float(systeme.get_sum_of_energy()))
 
 

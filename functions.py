@@ -89,13 +89,16 @@ def monte_carlo(systeme,proportion_b,type_algo,n):#ajouter les types de variable
             L.append(systeme.get_sum_of_energy())
             T.append(t)
     elif type_algo==4:#nouvelle version de temps de résidence
+        t=0
+        L.append(systeme.get_sum_of_energy())
+        T.append(t)
         new_sys=systeme.config_choice_init()
-        t+=new_sys[-1][-1]#total_energy_sorted[-1]
+        t+=1/new_sys[-1][-1]#total_energy_sorted[-1]
         L.append(systeme.get_sum_of_energy())
         T.append(t)
         for i in range (n):
             new_sys=systeme.config_choice_rec(new_sys[0],new_sys[1],new_sys[2])
-            t+=new_sys[-1][-1]#total_energy_sorted[-1]
+            t+=1/new_sys[-1][-1]#total_energy_sorted[-1]
             L.append(systeme.get_sum_of_energy())
             T.append(t)
         
