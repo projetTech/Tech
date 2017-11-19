@@ -15,18 +15,18 @@ import module_akmc as mc
 import functions as fn
 
 
-n_bloc=100
-n_ite = 100000
+n_bloc=10
+n_ite = 100
 scale=2
 size = 10
-dimension = 3
+dimension = 2
 e_aa = 0
 e_ab = 0.21
 e_bb = 0
 proportion_b = 0.5
 Temperature=297 #EN kelvin
 systeme = mc.system (size,dimension)
-systeme.set_maille([(0,0,0),(0.5,0.5,0.5)])
+systeme.set_maille([(0,0),(0.5,0.5)])
 systeme.set_link_energy([e_aa,e_ab,e_bb])
 systeme.initiate_map ()
 print ("Système crée en ", time()-a, " secondes")
