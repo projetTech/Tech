@@ -2,6 +2,7 @@
 
 False 0.0 0.0 0 
 True 0.5 0.5 0 
+<<<<<<< HEAD
 False 1.0 0.0 0 
 True 1.5 0.5 0 
 True 2.0 0.0 0 
@@ -66,6 +67,36 @@ True 1.0 3.0 0
 False 1.5 3.5 0 
 True 2.0 3.0 0 
 True 2.5 3.5 0 
+=======
+False 0.0 1.0 0 
+False 0.5 1.5 0 
+False 0.0 2.0 0 
+True 0.5 2.5 0 
+True 0.0 3.0 0 
+True 0.5 3.5 0 
+True 1.0 0.0 0 
+True 1.5 0.5 0 
+True 1.0 1.0 0 
+True 1.5 1.5 0 
+False 1.0 2.0 0 
+False 1.5 2.5 0 
+False 1.0 3.0 0 
+False 1.5 3.5 0 
+False 2.0 0.0 0 
+True 2.5 0.5 0 
+True 2.0 1.0 0 
+True 2.5 1.5 0 
+False 2.0 2.0 0 
+False 2.5 2.5 0 
+False 2.0 3.0 0 
+True 2.5 3.5 0 
+False 3.0 0.0 0 
+False 3.5 0.5 0 
+True 3.0 1.0 0 
+True 3.5 1.5 0 
+True 3.0 2.0 0 
+True 3.5 2.5 0 
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
 False 3.0 3.0 0 
 False 3.5 3.5 0 
 True 4.0 3.0 0 

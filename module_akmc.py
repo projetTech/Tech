@@ -16,7 +16,7 @@ import numpy as np
 """ classe interaction
 fonction : energie d'interaction entre 2 espèces
 """
-
+"""
 class species :
     def __init__(self,diameter,identity="gap"):
         self.__identity= identity
@@ -48,14 +48,20 @@ class species :
         distance = []
         for i in neighbors:
             for j in neighbors:
+<<<<<<< HEAD
                 distance.append(np.linalg.norm(pbc(i,j,size_systeme)))
         return (min(distance) > self.__diameter)
 
+=======
+                distance.append(np.linalg.norm(pbc(i,j,size))
+        return (min(distance) > self.__diameter) """
+        
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
 
-"""classe espèce
+""" classe espèce
 fonction : peut s'échanger avec
-fonction : peut aller dans tel site ( gestion de sites intersticiels et autres)"""
-
+fonction : peut aller dans tel site ( gestion de sites intersticiels et autres)
+"""
 
 
 class measure :
@@ -297,6 +303,7 @@ class system :
         r=random()*total
         picked=fn.dicho_search(total_energy_sorted,r)
         self.update_sum_of_energy(stockage_sites_list[picked][0],stockage_sites_list[picked][1])
+<<<<<<< HEAD
         couple=stockage_sites_list[picked]
         stockage_sites_list.remove(stockage_sites_list[picked])
         total_energy_sorted.remove(total_energy_sorted[picked])
@@ -304,6 +311,12 @@ class system :
 
         #ancienne version
 
+=======
+        return([stockage_sites_list[picked],stockage_sites_list,total_energy_sorted])
+       
+        #ancienne version 
+   
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
         #for site1 in self.__map:
          #   if site1.get_identity():
           #      for site2 in site1.get_neighbor():
@@ -333,6 +346,7 @@ class system :
         B=couple_changed[1].get_neighbor()
         #j'enlève les anciens potentiels changeables couples de voisins pour l'ancien couple_changed[1]
         for i in range(len(A)):
+<<<<<<< HEAD
             #enlever toutes les proba d'échange des sites échangés avec eurs voisins dans la config précedente
             if (couple_changed[0],A[i]) in stockage_sites_list:
 
@@ -362,11 +376,26 @@ class system :
 
                     j=stockage_sites_list.index((couple_changed[1],B[i]))
 
+=======
+            #s'ils étaient d'identités différentes 
+            #parcequ'on a echanger sitea et siteb
+            if couple_changed[1].get_identity() != A[i].get_identity(): 
+                #retourne l'indice de l'ancien couple dans la liste
+                if (couple_changed[0],A[i]) in stockage_sites_list:
+                    j=stockage_sites_list.index((couple_changed[0],A[i]))
+                elif (A[i],couple_changed[0]) in stockage_sites_list:
+                    j=stockage_sites_list.index((A[i],couple_changed[0]))
+                else:
+                    j=None 
+                #enlever toutes les proba d'échange concernant la config précedente 
+                if j!=None:
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
                     stockage_sites_list.remove(stockage_sites_list[j])
                     proba_exchange_done=total_energy_sorted[j]-total_energy_sorted[j-1]
                     for k in range(j+1,len(total_energy_sorted)):
                         total_energy_sorted[k]-=proba_exchange_done
                     total_energy_sorted.remove(total_energy_sorted[j])
+<<<<<<< HEAD
 
                 elif (B[i],couple_changed[1]) in stockage_sites_list:
 
@@ -378,6 +407,25 @@ class system :
                         total_energy_sorted[k]-=proba_exchange_done
                     total_energy_sorted.remove(total_energy_sorted[j])
         #ajouter les nouveaux echanges
+=======
+        #j'enlève les anciens potentiels changeables couples de voisins pour l'ancien couple_changed[0]                     
+        for i in range(len(B)):
+            #s'ils étaient d'identités différentes 
+            if couple_changed[0].get_identity() != B[i].get_identity(): #j'enlève les anciens potentiels changeables couples de voisins 
+                #retourne l'indice de l'ancien couple dans la liste
+                if (couple_changed[1],B[i]) in stockage_sites_list:
+                    j=stockage_sites_list.index((couple_changed[1],B[i]))
+                elif (B[i],couple_changed[1]) in stockage_sites_list:
+                    j=stockage_sites_list.index((B[i],couple_changed[1]))
+                #enlever toutes les proba d'échange concernant la config précedente 
+                stockage_sites_list.remove(stockage_sites_list[j])
+                proba_exchange_done=total_energy_sorted[j]-total_energy_sorted[j-1]
+                for k in range(j+1,len(total_energy_sorted)):
+                    total_energy_sorted[k]-=proba_exchange_done
+                total_energy_sorted.remove(total_energy_sorted[j])
+                 
+        #ajouter les nouveaux echanges 
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
         for i in range(len(A)):
             #ajouter les nouveaux echanges pour couple_change[0]
             if couple_changed[0].get_identity() != A[i].get_identity():
@@ -414,6 +462,7 @@ class system :
                     total_energy_sorted.append(total)
 
         r=random()*total_energy_sorted[-1]
+<<<<<<< HEAD
         picked=fn.dicho_search(total_energy_sorted,r)
         self.update_sum_of_energy(stockage_sites_list[picked][0],stockage_sites_list[picked][1])
         couple=stockage_sites_list[picked]
@@ -423,6 +472,12 @@ class system :
 
 
 
+=======
+        i=fn.dicho_search(total_energy_sorted,r)
+        self.update_sum_of_energy(stockage_sites_list[i][0],stockage_sites_list[i][1])
+        return([stockage_sites_list[i],stockage_sites_list,total_energy_sorted])
+    
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
     def config_choice(self):
         energy_init=self.__sum_of_energy
         total=0
