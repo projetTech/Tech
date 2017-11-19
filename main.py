@@ -33,6 +33,13 @@ print ("Système crée en ", time()-a, " secondes")
 fn.monte_carlo(systeme,proportion_b,3,n_bloc,n_ite,scale)
 print(systeme.get_sum_of_energy())
 
+<<<<<<< HEAD
+=======
+#fn.monte_carlo(systeme,proportion_b,2,n)
+#fn.monte_carlo(systeme,proportion_b,1,n)
+fn.monte_carlo(systeme,proportion_b,4,n)
+print("final energy =" , float(systeme.get_sum_of_energy()))
+>>>>>>> parent of 64409e6... temps de résidence OK (i guess :p)
 
 
 
