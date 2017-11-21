@@ -53,7 +53,7 @@ type = 4 -> Temps de résidence amélioré
 A terme, cette variable type sera de type string et contiendra le nom de la fonction directement
 """
 
-def monte_carlo(systeme,proportion_b,type_algo,nb_bloc = 10 , ite_bloc = 1000 , scale_affichage =1.25):
+def monte_carlo(systeme,proportion_b,type_algo,nb_bloc = 1000 , ite_bloc = 10000 , scale_affichage =0.5):
     t=0
     nombre_b = int(systeme.get_site_number()*proportion_b)
     L=[]
@@ -94,38 +94,31 @@ def monte_carlo(systeme,proportion_b,type_algo,nb_bloc = 10 , ite_bloc = 1000 , 
     else :
         print("Erreur de récuperation de dimension lors de l'affichage ou dimension incorrecte")
 
-    if type_algo == 1:#"residence-time"
-        for i in range(nb_bloc):
-            t+=systeme.config_choice()
-            L.append(systeme.get_sum_of_energy())
-            T.append(t)
-    elif type_algo == 2:#"metropolis"
-        for i in range (nb_bloc):
-            t+=10**(-13)
-            systeme.one_step()
-            L.append(systeme.get_sum_of_energy())
-            T.append(t)
-    elif type_algo==3:
-        for i in range (nb_bloc):
-            t+=10**(-13)
-            systeme.one_step_1()
-            L.append(systeme.get_sum_of_energy())
-            T.append(t)
+
+    if type_algo == 2:#"metropolis"
+        for j in range(nb_bloc):
+            for i in range (ite_bloc):
+                t+=10**(-13)
+                systeme.one_step()
+                L.append(systeme.get_sum_of_energy())
+                T.append(t)
+
     elif type_algo==4:#nouvelle version de temps de résidence
         new_sys=systeme.config_choice_init()
-        t+=new_sys[-1][-1]#total_energy_sorted[-1]
+        t+=1/new_sys[-1][-1]#total_energy_sorted[-1]
         L.append(systeme.get_sum_of_energy())
         T.append(t)
         for i in range (nb_bloc):
-            new_sys=systeme.config_choice_rec(new_sys[0],new_sys[1],new_sys[2])
-            t+=new_sys[-1][-1]#total_energy_sorted[-1]
-            L.append(systeme.get_sum_of_energy())
-            T.append(t)
+            for j in range (ite_bloc):
+                new_sys=systeme.config_choice_rec(new_sys[0],new_sys[1],new_sys[2])
+                t+=1/new_sys[-1][-1]#total_energy_sorted[-1]
+                L.append(systeme.get_sum_of_energy())
+                T.append(t)
     else:
         print("incorrect type")
 
 # Affichage final
-    fig = plt.figure(figsize = (scale,scale))
+    fig = plt.figure(figsize = (0.5,0.5))
     ax = fig.add_subplot(111, projection='3d')
     if systeme.get_dimension() == 3:
         ax.scatter([a.get_coordinate()[0] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[1] for a in systeme.get_map() if a.get_identity()],[a.get_coordinate()[2] for a in systeme.get_map() if a.get_identity()],s=20,marker="o",c='r')
